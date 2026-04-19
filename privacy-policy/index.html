@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — OptionsLab.io</title>
+<meta name="description" content="Privacy Policy for OptionsLab.io — Free Options Trading Calculators.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #080b10;
+    --surface: #0f1520;
+    --border:  #1a2438;
+    --border2: #223050;
+    --text:    #dde6f0;
+    --muted:   #4a6080;
+    --muted2:  #6a85a8;
+    --accent:  #00d4ff;
+    --mono:    'IBM Plex Mono', monospace;
+    --sans:    'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    border-bottom: 1px solid var(--border);
+    background: rgba(8,11,16,0.92);
+    backdrop-filter: blur(16px);
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+  .logo span { color: var(--accent); }
+  .back-link {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted2);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  /* MAIN */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  .page-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .page-title {
+    font-family: var(--mono);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .page-meta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* CONTENT */
+  .policy-body { max-width: 680px; }
+
+  h2 {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin: 40px 0 14px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+  }
+  h2:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+
+  p {
+    font-size: 0.92rem;
+    color: var(--muted2);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  ul {
+    margin: 0 0 16px 0;
+    padding-left: 0;
+    list-style: none;
+  }
+  ul li {
+    font-size: 0.92rem;
+    color: var(--muted2);
+    line-height: 1.8;
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+  ul li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a:hover { text-decoration: underline; }
+
+  .highlight-box {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .highlight-box p {
+    margin-bottom: 0;
+    font-size: 0.88rem;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">options<span>lab</span>.io</a>
+    <a href="/" class="back-link">← Back to Tools</a>
+  </div>
+</header>
+
+<main>
+  <div class="page-eyebrow">Legal</div>
+  <h1 class="page-title">Privacy Policy</h1>
+  <div class="page-meta">LAST UPDATED: APRIL 19, 2026 &nbsp;·&nbsp; OPTIONSLAB.IO</div>
+
+  <div class="policy-body">
+
+    <div class="highlight-box">
+      <p>OptionsLab.io is committed to protecting your privacy. The short version: we collect minimal data, we don't sell anything, and all calculator tools run entirely in your browser — no data you enter is ever sent to our servers.</p>
+    </div>
+
+    <h2>1. Who We Are</h2>
+    <p>OptionsLab.io ("we", "us", or "our") operates the website located at <a href="https://optionslab.io">https://optionslab.io</a>. We provide free options trading calculators and financial education tools for retail traders.</p>
+
+    <h2>2. Information We Collect</h2>
+    <p>We collect minimal information to operate the site:</p>
+    <ul>
+      <li><strong>Usage data</strong> — standard web server logs including IP addresses, browser type, pages visited, and referring URLs. This is collected automatically by our hosting provider (Cloudflare) and used solely for site performance and security monitoring.</li>
+      <li><strong>Cookies</strong> — we may use essential cookies required for site functionality. We do not use tracking or advertising cookies beyond what is set by third-party advertising services (see Section 5).</li>
+      <li><strong>Calculator inputs</strong> — any numbers or values you enter into our calculator tools are processed entirely within your browser and are never transmitted to or stored on our servers.</li>
+    </ul>
+    <p>We do not collect your name, email address, or any personally identifiable information unless you voluntarily contact us directly.</p>
+
+    <h2>3. How We Use Information</h2>
+    <p>Information we collect is used to:</p>
+    <ul>
+      <li>Operate, maintain, and improve the website</li>
+      <li>Monitor site performance, uptime, and security</li>
+      <li>Understand aggregate usage patterns to improve our tools</li>
+      <li>Comply with legal obligations</li>
+    </ul>
+    <p>We do not use your information for marketing, and we do not sell or rent your data to third parties.</p>
+
+    <h2>4. Cloudflare</h2>
+    <p>Our website is hosted and delivered through Cloudflare's global network. Cloudflare may collect and process technical data including IP addresses and request metadata as part of providing DNS, CDN, and security services. This processing is governed by <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare's Privacy Policy</a>.</p>
+
+    <h2>5. Advertising</h2>
+    <p>We may display advertisements on our site through third-party advertising networks, including Google AdSense. These services may use cookies and similar tracking technologies to serve ads based on your prior visits to our site and other websites.</p>
+    <p>Google's use of advertising cookies enables it and its partners to serve ads based on your visit to our site and other sites on the internet. You may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a>.</p>
+    <p>For more information on how Google uses data when you use our site, visit <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">How Google uses data when you use our partners' sites or apps</a>.</p>
+
+    <h2>6. Third-Party Links</h2>
+    <p>Our site may contain links to external websites. We are not responsible for the privacy practices or content of those sites and encourage you to review their privacy policies independently.</p>
+
+    <h2>7. Children's Privacy</h2>
+    <p>OptionsLab.io is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you believe we have inadvertently collected information from a child, please contact us and we will promptly delete it.</p>
+
+    <h2>8. Data Retention</h2>
+    <p>Server log data is retained for a limited period for security and operational purposes, after which it is deleted. Since we do not collect personal account information, there is no user data to retain or delete beyond standard server logs.</p>
+
+    <h2>9. Your Rights</h2>
+    <p>Depending on your location, you may have rights regarding your personal data, including the right to access, correct, or request deletion of data we hold about you. Since we collect minimal data and no account information, most requests can be addressed by simply not using the site.</p>
+    <p>For any privacy-related requests or questions, please contact us at the address below.</p>
+
+    <h2>10. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated revision date. Continued use of the site following any changes constitutes your acceptance of the updated policy.</p>
+
+    <h2>11. Contact</h2>
+    <p>If you have any questions about this Privacy Policy, please contact us at:</p>
+    <p><strong style="color:var(--text);">OptionsLab.io</strong><br>
+    <a href="mailto:privacy@optionslab.io">privacy@optionslab.io</a></p>
+
+    <h2>12. Disclaimer</h2>
+    <p>OptionsLab.io provides tools for educational and informational purposes only. Nothing on this site constitutes financial advice. Options trading involves substantial risk of loss and is not suitable for all investors. Past performance is not indicative of future results.</p>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-copy">© 2026 OPTIONSLAB.IO — ALL RIGHTS RESERVED · NOT FINANCIAL ADVICE</div>
+</footer>
+
+</body>
+</html>
