@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OptionsLab — Free Options Trading Calculators & Tools</title>
+<meta name="description" content="Free options trading calculators for retail traders. P&L calculator, wheel strategy returns, position sizing, probability of profit and more. No signup required.">
+<meta property="og:title" content="OptionsLab — Free Options Trading Tools">
+<meta property="og:description" content="Professional-grade options calculators. Free, fast, no signup required.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://optionslab.io">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #080b10;
+    --bg2:      #0d1117;
+    --surface:  #0f1520;
+    --surface2: #141c2b;
+    --border:   #1a2438;
+    --border2:  #223050;
+    --text:     #dde6f0;
+    --muted:    #4a6080;
+    --muted2:   #6a85a8;
+    --accent:   #00d4ff;
+    --accent2:  #0099cc;
+    --green:    #00e676;
+    --green2:   #00c853;
+    --red:      #ff4060;
+    --yellow:   #ffd740;
+    --purple:   #bb86fc;
+    --mono:     'IBM Plex Mono', monospace;
+    --display:  'Bebas Neue', sans-serif;
+    --sans:     'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .z1 { position: relative; z-index: 1; }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    border-bottom: 1px solid var(--border);
+    background: rgba(8,11,16,0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--display);
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: 1px;
+  }
+  .logo span { color: var(--accent); }
+  .logo-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-left: 3px;
+    margin-bottom: 3px;
+    display: inline-block;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  nav { display: flex; align-items: center; gap: 28px; }
+  nav a {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--muted2);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  nav a:hover { color: var(--accent); }
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--bg) !important;
+    background: var(--accent);
+    padding: 7px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.15s !important;
+  }
+  .nav-cta:hover { background: var(--accent2) !important; color: var(--bg) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  @media (max-width: 800px) {
+    .hero { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+    .hero-visual { display: none; }
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--accent);
+    display: block;
+  }
+
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+    display: block;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--muted2);
+    max-width: 420px;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 13px 24px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--muted2);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    padding: 13px 24px;
+    border-radius: 5px;
+    border: 1px solid var(--border2);
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .btn-secondary:hover { color: var(--text); border-color: var(--muted2); }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .stat-item {}
+  .stat-value {
+    font-family: var(--display);
+    font-size: 2rem;
+    color: var(--text);
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .stat-value span { color: var(--accent); }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ── HERO VISUAL (mock terminal) ── */
+  .hero-visual {
+    position: relative;
+  }
+  .terminal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.05);
+  }
+  .terminal-bar {
+    background: var(--surface2);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tb-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .tb-dot.r { background: #ff5f57; }
+  .tb-dot.y { background: #febc2e; }
+  .tb-dot.g { background: #28c840; }
+  .terminal-title {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-left: 8px;
+    letter-spacing: 0.06em;
+  }
+  .terminal-body { padding: 24px; }
+  .t-line {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.8;
+    opacity: 0;
+    animation: fadeInLine 0.3s ease forwards;
+  }
+  .t-line:nth-child(1)  { animation-delay: 0.3s; }
+  .t-line:nth-child(2)  { animation-delay: 0.6s; }
+  .t-line:nth-child(3)  { animation-delay: 0.9s; }
+  .t-line:nth-child(4)  { animation-delay: 1.2s; }
+  .t-line:nth-child(5)  { animation-delay: 1.5s; }
+  .t-line:nth-child(6)  { animation-delay: 1.8s; }
+  .t-line:nth-child(7)  { animation-delay: 2.1s; }
+  .t-line:nth-child(8)  { animation-delay: 2.4s; }
+  .t-line:nth-child(9)  { animation-delay: 2.7s; }
+  .t-line:nth-child(10) { animation-delay: 3.0s; }
+  .t-line:nth-child(11) { animation-delay: 3.3s; }
+  .t-line:nth-child(12) { animation-delay: 3.6s; }
+  @keyframes fadeInLine {
+    from { opacity: 0; transform: translateX(-4px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .t-prompt { color: var(--muted); }
+  .t-cmd    { color: var(--accent); }
+  .t-key    { color: var(--muted2); }
+  .t-val    { color: var(--text); }
+  .t-pos    { color: var(--green); }
+  .t-neg    { color: var(--red); }
+  .t-warn   { color: var(--yellow); }
+  .t-comment { color: var(--muted); font-style: italic; }
+  .t-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 10px 0;
+  }
+  .t-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--accent);
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+    opacity: 0;
+    animation-delay: 3.8s;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* glow ring behind terminal */
+  .terminal-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section { max-width: 1200px; margin: 0 auto; padding: 80px 24px; }
+  .section-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-eyebrow::before { content: '//'; color: var(--muted); }
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    color: var(--muted2);
+    font-size: 0.95rem;
+    max-width: 500px;
+    line-height: 1.7;
+    margin-bottom: 56px;
+  }
+
+  /* ── TOOLS GRID ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 900px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .tools-grid { grid-template-columns: 1fr; } }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent)), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .tool-card:hover {
+    border-color: var(--card-accent, var(--accent));
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+  }
+  .tool-card:hover::before { opacity: 1; }
+
+  .tool-card.featured {
+    grid-column: span 2;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 28px;
+    background: var(--surface2);
+    border-color: var(--border2);
+  }
+  @media (max-width: 560px) { .tool-card.featured { grid-column: span 1; flex-direction: column; } }
+
+  .tool-card.coming-soon {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .tool-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .tool-meta { flex: 1; }
+  .tool-badge {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .badge-live { background: rgba(0,230,118,0.1); color: var(--green); border: 1px solid rgba(0,230,118,0.2); }
+  .badge-soon { background: rgba(255,215,64,0.1); color: var(--yellow); border: 1px solid rgba(255,215,64,0.2); }
+  .badge-new  { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+
+  .tool-name {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+  }
+  .tool-desc {
+    font-size: 0.83rem;
+    color: var(--muted2);
+    line-height: 1.6;
+  }
+  .tool-arrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    margin-top: auto;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    padding-top: 12px;
+  }
+  .tool-card:hover .tool-arrow { opacity: 1; transform: translateX(4px); }
+
+  /* ── WHY SECTION ── */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  @media (max-width: 700px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .why-item {
+    background: var(--surface);
+    padding: 32px 24px;
+    transition: background 0.2s;
+  }
+  .why-item:hover { background: var(--surface2); }
+  .why-icon {
+    font-size: 1.4rem;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .why-title {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: 0.03em;
+  }
+  .why-desc {
+    font-size: 0.8rem;
+    color: var(--muted2);
+    line-height: 1.6;
+  }
+
+  /* ── STRATEGY EXPLAINER ── */
+  .explainer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 700px) {
+    .explainer { grid-template-columns: 1fr; padding: 32px 24px; gap: 32px; }
+  }
+
+  .explainer-title {
+    font-family: var(--display);
+    font-size: 2.6rem;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .explainer-text {
+    font-size: 0.88rem;
+    color: var(--muted2);
+    line-height: 1.75;
+    margin-bottom: 24px;
+  }
+
+  .flow-steps { display: flex; flex-direction: column; gap: 3px; }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    transition: border-color 0.2s;
+  }
+  .flow-step:hover { border-color: var(--border2); }
+  .flow-num {
+    font-family: var(--display);
+    font-size: 1.6rem;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 32px;
+  }
+  .flow-content {}
+  .flow-title {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .flow-desc {
+    font-size: 0.78rem;
+    color: var(--muted2);
+    line-height: 1.5;
+  }
+  .flow-arrow {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--border2);
+    padding: 2px 0;
+  }
+
+  /* ── CTA BANNER ── */
+  .cta-banner {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 60px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-banner::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 200px;
+    background: radial-gradient(ellipse, rgba(0,212,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-title {
+    font-family: var(--display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: 0.03em;
+    margin-bottom: 14px;
+  }
+  .cta-sub {
+    color: var(--muted2);
+    font-size: 0.95rem;
+    margin-bottom: 32px;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+  }
+  .cta-note {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-top: 16px;
+  }
+
+  /* ── AD BANNER ── */
+  .ad-strip {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 12px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0 24px;
+    margin-top: 0;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  @media (max-width: 640px) { .footer-top { grid-template-columns: 1fr; gap: 28px; } }
+
+  .footer-brand .logo { margin-bottom: 14px; display: inline-flex; }
+  .footer-tagline {
+    font-size: 0.82rem;
+    color: var(--muted2);
+    line-height: 1.6;
+    max-width: 280px;
+  }
+  .footer-col-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .footer-links { display: flex; flex-direction: column; gap: 9px; }
+  .footer-links a {
+    font-size: 0.82rem;
+    color: var(--muted2);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .footer-disclaimer {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    max-width: 500px;
+    text-align: right;
+  }
+  @media (max-width: 640px) { .footer-disclaimer { text-align: left; max-width: 100%; } }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    overflow: hidden;
+    padding: 10px 0;
+  }
+  .ticker-track {
+    display: flex;
+    gap: 60px;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .ticker-item {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted2);
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .ticker-item .up   { color: var(--green); }
+  .ticker-item .down { color: var(--red); }
+  .ticker-sep { color: var(--border2); }
+</style>
+</head>
+<body class="z1">
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Options<span>Lab</span><div class="logo-dot"></div></a>
+    <nav>
+      <a href="#tools">Tools</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="/calculator">P&L Calculator</a>
+      <a href="/calculator" class="nav-cta">→ Open Calculator</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ── AD BANNER ── -->
+<div class="ad-strip">[ ADVERTISEMENT — 728×90 LEADERBOARD ]</div>
+
+<!-- ── TICKER ── -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <!-- First set -->
+    <div class="ticker-item">CSP <span class="up">MAX PROFIT = PREMIUM</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">BREAKEVEN <span class="up">= STRIKE − PREMIUM</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">THETA DECAY <span class="down">ACCELERATES AT 21 DTE</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">WHEEL CYCLE <span class="up">CSP → ASSIGN → CC → REPEAT</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">DELTA 0.30 <span class="up">≈ 30% PROBABILITY OF ASSIGNMENT</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">XSP <span class="up">SECTION 1256 · CASH SETTLED</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">45 DTE ENTRY <span class="up">OPTIMAL THETA COLLECTION</span></div>
+    <div class="ticker-sep">·</div>
+    <!-- Duplicate for seamless loop -->
+    <div class="ticker-item">CSP <span class="up">MAX PROFIT = PREMIUM</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">BREAKEVEN <span class="up">= STRIKE − PREMIUM</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">THETA DECAY <span class="down">ACCELERATES AT 21 DTE</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">WHEEL CYCLE <span class="up">CSP → ASSIGN → CC → REPEAT</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">DELTA 0.30 <span class="up">≈ 30% PROBABILITY OF ASSIGNMENT</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">XSP <span class="up">SECTION 1256 · CASH SETTLED</span></div>
+    <div class="ticker-sep">·</div>
+    <div class="ticker-item">45 DTE ENTRY <span class="up">OPTIMAL THETA COLLECTION</span></div>
+    <div class="ticker-sep">·</div>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<div class="z1">
+  <div class="hero">
+    <div class="hero-copy">
+      <div class="hero-eyebrow">Free Options Tools</div>
+      <h1>TRADE<br>SMARTER.<br><em>CALCULATE</em><br>FASTER.</h1>
+      <p class="hero-sub">Professional-grade options calculators built for retail traders running wheel strategies, credit spreads, and income systems. No signup. No paywall. Just the math.</p>
+      <div class="hero-actions">
+        <a href="/calculator" class="btn-primary">→ P&L Calculator</a>
+        <a href="#tools" class="btn-secondary">View All Tools</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-value">3<span>+</span></div>
+          <div class="stat-label">Free Tools</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">0<span>$</span></div>
+          <div class="stat-label">Cost Forever</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">0</div>
+          <div class="stat-label">Signups Required</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="terminal-glow"></div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="tb-dot r"></div>
+          <div class="tb-dot y"></div>
+          <div class="tb-dot g"></div>
+          <span class="terminal-title">optionslab.io — p&l calculator</span>
+        </div>
+        <div class="terminal-body">
+          <div class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">calculate</span> --strategy=CSP</div>
+          <div class="t-line">&nbsp;</div>
+          <div class="t-line"><span class="t-key">ticker        </span> <span class="t-val">SOXL</span></div>
+          <div class="t-line"><span class="t-key">stock_price   </span> <span class="t-val">$28.40</span></div>
+          <div class="t-line"><span class="t-key">strike        </span> <span class="t-val">$26.00</span></div>
+          <div class="t-line"><span class="t-key">premium       </span> <span class="t-val">$1.85</span></div>
+          <div class="t-line"><span class="t-key">contracts     </span> <span class="t-val">2</span></div>
+          <div class="t-line"><span class="t-key">dte           </span> <span class="t-val">45</span></div>
+          <hr class="t-divider">
+          <div class="t-line"><span class="t-key">max_profit    </span> <span class="t-pos">+$370.00</span></div>
+          <div class="t-line"><span class="t-key">breakeven     </span> <span class="t-warn">$24.15</span></div>
+          <div class="t-line"><span class="t-key">return_on_cap </span> <span class="t-pos">+7.12% annualized</span></div>
+          <div class="t-line"><span class="t-prompt">$</span> <span class="t-cursor"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOOLS GRID ── -->
+<div class="z1">
+  <div class="section" id="tools">
+    <div class="section-eyebrow">Tool Suite</div>
+    <h2 class="section-title">ALL THE MATH.<br>NONE OF THE NOISE.</h2>
+    <p class="section-sub">Every calculator a wheel trader needs, built with the precision of a professional platform and the simplicity of a utility tool.</p>
+
+    <div class="tools-grid">
+
+      <!-- Featured: P&L Calculator -->
+      <a href="/calculator" class="tool-card featured" style="--card-accent: var(--accent);">
+        <div class="tool-icon" style="background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.2);font-size:1.4rem;">📊</div>
+        <div class="tool-meta">
+          <div class="tool-badge badge-live">● LIVE</div>
+          <div class="tool-name">Options P&L Calculator</div>
+          <div class="tool-desc">Visualize profit, loss, and breakeven across the full price range at expiration. Supports cash-secured puts, covered calls, and vertical credit spreads. Interactive chart with key metrics — max profit, max loss, return on risk, capital required.</div>
+          <div class="tool-arrow">→ Open Calculator</div>
+        </div>
+      </a>
+
+      <!-- Wheel Return -->
+      <div class="tool-card coming-soon" style="--card-accent: var(--green);">
+        <div class="tool-icon" style="background:rgba(0,230,118,0.08);border-color:rgba(0,230,118,0.15);">🔄</div>
+        <div class="tool-badge badge-soon">COMING SOON</div>
+        <div class="tool-name">Wheel Return Calculator</div>
+        <div class="tool-desc">Model a full CSP-to-covered-call wheel cycle. Calculate total premium collected, annualized yield, and effective cost basis across the complete income loop.</div>
+        <div class="tool-arrow">→ Coming Soon</div>
+      </div>
+
+      <!-- Position Sizing -->
+      <div class="tool-card coming-soon" style="--card-accent: var(--yellow);">
+        <div class="tool-icon" style="background:rgba(255,215,64,0.08);border-color:rgba(255,215,64,0.15);">⚖️</div>
+        <div class="tool-badge badge-soon">COMING SOON</div>
+        <div class="tool-name">Position Sizing Calculator</div>
+        <div class="tool-desc">Calculate optimal contract size based on account value, max risk per trade, and delta. Never over-allocate to a single position again.</div>
+        <div class="tool-arrow">→ Coming Soon</div>
+      </div>
+
+      <!-- Probability of Profit -->
+      <div class="tool-card coming-soon" style="--card-accent: var(--purple);">
+        <div class="tool-icon" style="background:rgba(187,134,252,0.08);border-color:rgba(187,134,252,0.15);">🎯</div>
+        <div class="tool-badge badge-soon">COMING SOON</div>
+        <div class="tool-name">Probability of Profit</div>
+        <div class="tool-desc">Estimate the statistical probability your short option expires worthless. Based on delta approximation and Black-Scholes methodology.</div>
+        <div class="tool-arrow">→ Coming Soon</div>
+      </div>
+
+      <!-- IV Rank -->
+      <div class="tool-card coming-soon" style="--card-accent: var(--red);">
+        <div class="tool-icon" style="background:rgba(255,64,96,0.08);border-color:rgba(255,64,96,0.15);">📈</div>
+        <div class="tool-badge badge-soon">COMING SOON</div>
+        <div class="tool-name">IV Rank Calculator</div>
+        <div class="tool-desc">Enter 52-week IV high, low, and current IV to get IV Rank and IV Percentile instantly. Know whether implied volatility is elevated before you sell premium.</div>
+        <div class="tool-arrow">→ Coming Soon</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── WHY SECTION ── -->
+<div class="z1">
+  <div class="section" style="padding-top:0;">
+    <div class="section-eyebrow">Why OptionsLab</div>
+    <h2 class="section-title">BUILT FOR<br>TRADERS.</h2>
+    <p class="section-sub">No bloat, no paywalls, no account required. Just fast, accurate tools that respect your time.</p>
+
+    <div class="why-grid fade-up">
+      <div class="why-item">
+        <span class="why-icon">⚡</span>
+        <div class="why-title">Instant Results</div>
+        <div class="why-desc">All calculations run in your browser. No server roundtrips, no loading spinners. Results appear as you type.</div>
+      </div>
+      <div class="why-item">
+        <span class="why-icon">🔓</span>
+        <div class="why-title">No Signup Required</div>
+        <div class="why-desc">Every tool is free, forever. No email, no credit card, no account. Open and calculate.</div>
+      </div>
+      <div class="why-item">
+        <span class="why-icon">📐</span>
+        <div class="why-title">Trader-Designed</div>
+        <div class="why-desc">Built by options traders for options traders. The metrics shown are the ones that actually matter for income strategies.</div>
+      </div>
+      <div class="why-item">
+        <span class="why-icon">📱</span>
+        <div class="why-title">Works Everywhere</div>
+        <div class="why-desc">Fully responsive across desktop, tablet, and mobile. Run calculations from the trading desk or the couch.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── EXPLAINER ── -->
+<div class="z1">
+  <div class="section" style="padding-top:0;" id="how-it-works">
+    <div class="explainer fade-up">
+      <div>
+        <div class="section-eyebrow">The Wheel Strategy</div>
+        <h3 class="explainer-title">THE INCOME LOOP EXPLAINED</h3>
+        <p class="explainer-text">The wheel strategy is a systematic options income approach: sell cash-secured puts, collect premium, accept assignment if needed, then sell covered calls to generate more income while waiting to exit. Repeat.</p>
+        <p class="explainer-text">OptionsLab's tools are designed around each phase of this cycle — so you always know your numbers before you place the trade.</p>
+        <a href="/calculator" class="btn-primary" style="display:inline-flex;">→ Start Calculating</a>
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">01</div>
+          <div class="flow-content">
+            <div class="flow-title">Sell Cash-Secured Put</div>
+            <div class="flow-desc">Collect premium below market price. If the stock stays above your strike, the option expires worthless and you keep the full premium.</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-num">02</div>
+          <div class="flow-content">
+            <div class="flow-title">Assignment (if triggered)</div>
+            <div class="flow-desc">If assigned, you buy 100 shares at your strike price. Your effective cost basis is strike minus premium collected.</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-num">03</div>
+          <div class="flow-content">
+            <div class="flow-title">Sell Covered Call</div>
+            <div class="flow-desc">Now owning shares, sell a covered call above your cost basis. Collect more premium and define your exit price.</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-num">04</div>
+          <div class="flow-content">
+            <div class="flow-title">Repeat the Cycle</div>
+            <div class="flow-desc">Whether called away or expired, restart the wheel. Each cycle generates premium income on the same capital.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CTA ── -->
+<div class="z1">
+  <div class="section" style="padding-top:0;">
+    <div class="cta-banner fade-up">
+      <h2 class="cta-title">KNOW YOUR<br>NUMBERS.</h2>
+      <p class="cta-sub">Stop estimating. Start calculating. The P&L calculator is free, instant, and requires nothing from you.</p>
+      <a href="/calculator" class="btn-primary" style="font-size:0.85rem;padding:15px 32px;">→ Open P&L Calculator</a>
+      <div class="cta-note">FREE · NO SIGNUP · NO ADS ON TOOL PAGES*</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="z1">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="logo">Options<span>Lab</span><div class="logo-dot"></div></a>
+        <p class="footer-tagline" style="margin-top:14px;">Free options trading calculators for retail traders. No signup, no paywall, just the math you need to trade smarter.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Tools</div>
+        <div class="footer-links">
+          <a href="/calculator">P&L Calculator</a>
+          <a href="#">Wheel Return Calculator</a>
+          <a href="#">Position Sizing</a>
+          <a href="#">Probability of Profit</a>
+          <a href="#">IV Rank Calculator</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Info</div>
+        <div class="footer-links">
+          <a href="#">About</a>
+          <a href="#">How It Works</a>
+          <a href="#">Disclaimer</a>
+          <a href="#">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 OPTIONSLAB.IO — ALL RIGHTS RESERVED</div>
+      <div class="footer-disclaimer">Not financial advice. Options trading involves substantial risk of loss and is not suitable for all investors. For educational use only.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+        observer.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
